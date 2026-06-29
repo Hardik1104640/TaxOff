@@ -1,0 +1,15 @@
+{
+  "name": "taxoff",
+  "version": "1.0.0",
+  "description": "Tax Return Buddy landing page with Razorpay backend integration",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.1",
+    "express": "^4.18.2",
+    "razorpay": "^2.5.0"
+  }
+}
