@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="TaxOFF helps salaried professionals, freelancers, and startups file with confidence using expert-guided guidance and simplified compliance workflows."
+    />
+    <title>TaxOFF | Guided tax filing and compliance</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f4f7fb;
+        --surface: #ffffff;
+        --surface-2: #f8fbff;
+        --text: #10213a;
+        --muted: #5f6e85;
+        --border: rgba(16, 33, 58, 0.12);
+        --accent: #2f6df6;
+        --accent-strong: #1e4fbe;
+        --accent-soft: rgba(47, 109, 246, 0.12);
+        --success: #0d9c73;
+        --shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+        --radius-lg: 24px;
+        --radius-md: 16px;
+        --radius-sm: 10px;
+        --space-1: 4px;
+        --space-2: 8px;
+        --space-3: 12px;
+        --space-4: 16px;
+        --space-5: 20px;
+        --space-6: 24px;
+        --space-7: 32px;
+        --space-8: 40px;
+        --space-9: 56px;
+        --space-10: 80px;
+        --max-width: 1180px;
+        --transition: 220ms ease;
+      }
+
+      [data-theme="dark"] {
+        color-scheme: dark;
+        --bg: #07111e;
+        --surface: #0f1b2c;
+        --surface-2: #132235;
+        --text: #f6f8ff;
+        --muted: #9fb0ca;
+        --border: rgba(255, 255, 255, 0.12);
+        --accent: #6da5ff;
+        --accent-strong: #9ac4ff;
+        --accent-soft: rgba(109, 165, 255, 0.16);
+        --success: #4ed0a1;
+        --shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+        background: radial-gradient(circle at top left, rgba(47, 109, 246, 0.12), transparent 30%), var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        transition: background var(--transition), color var(--transition);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      img,
+      svg {
+        display: block;
+        max-width: 100%;
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      :focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 3px;
+      }
+
+      .skip-link {
+        position: absolute;
+        left: 16px;
+        top: -50px;
+        background: var(--surface);
+        color: var(--text);
+        padding: 8px 12px;
+        border-radius: 999px;
+        z-index: 1000;
+      }
+
+      .skip-link:focus {
+        top: 16px;
+      }
+
+      .container {
+        width: min(100% - 32px, var(--max-width));
+        margin-inline: auto;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 18px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        font-weight: 600;
+        transition: transform var(--transition), box-shadow var(--transition), background var(--transition), color var(--transition);
+        cursor: pointer;
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+      }
+
+      .button-primary {
+        background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+        color: white;
+        box-shadow: 0 12px 30px rgba(47, 109, 246, 0.2);
+      }
+
+      .button-secondary {
+        background: var(--surface);
+        color: var(--text);
+        border-color: var(--border);
+      }
+
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        backdrop-filter: blur(16px);
+        background: rgba(244, 247, 251, 0.7);
+        border-bottom: 1px solid rgba(16, 33, 58, 0.06);
+      }
+
+      [data-theme="dark"] .header {
+        background: rgba(7, 17, 30, 0.8);
+        border-bottom-color: rgba(255, 255, 255, 0.08);
+      }
+
+      .nav-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        min-height: 76px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      .brand-mark {
+        width: 40px;
+        height: 40px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--accent-soft), rgba(13, 156, 115, 0.2));
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        color: var(--muted);
+      }
+
+      .nav-links a:hover {
+        color: var(--text);
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .theme-toggle {
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+      }
+
+      .hero {
+        display: grid;
+        gap: 32px;
+        align-items: center;
+        padding: 56px 0 32px;
+        grid-template-columns: 1.1fr 0.9fr;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+      }
+
+      h1 {
+        font-size: clamp(2.3rem, 4vw, 4.2rem);
+        margin: 14px 0 14px;
+      }
+
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--muted);
+        max-width: 650px;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 22px 0 18px;
+      }
+
+      .trust-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 16px;
+        color: var(--muted);
+        margin-top: 18px;
+      }
+
+      .trust-row .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        border-radius: 999px;
+      }
+
+      .hero-card {
+        position: relative;
+        background: linear-gradient(145deg, var(--surface), var(--surface-2));
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        box-shadow: var(--shadow);
+      }
+
+      .hero-orbit {
+        display: grid;
+        gap: 16px;
+      }
+
+      .orbit-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 16px;
+        border-radius: var(--radius-md);
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        font-weight: 600;
+      }
+
+      .stats-strip,
+      .section,
+      .footer {
+        padding: 24px 0 56px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 20px;
+        box-shadow: var(--shadow);
+      }
+
+      .stat-number {
+        font-size: clamp(1.25rem, 2vw, 1.55rem);
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+
+      .section-head {
+        display: flex;
+        gap: 16px;
+        justify-content: space-between;
+        align-items: end;
+        margin-bottom: 22px;
+      }
+
+      .section-head p {
+        color: var(--muted);
+        margin: 0;
+      }
+
+      .grid-3,
+      .grid-4 {
+        display: grid;
+        gap: 16px;
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .grid-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 20px;
+        box-shadow: var(--shadow);
+      }
+
+      .plan-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .plan-card {
+        background: var(--surface);
+        border: 1px solid rgba(16, 33, 58, 0.08);
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: 0 18px 30px rgba(15, 23, 42, 0.05);
+        cursor: pointer;
+        transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+      }
+
+      .plan-card:hover,
+      .plan-card:focus-within {
+        transform: translateY(-2px);
+        border-color: rgba(47, 109, 246, 0.28);
+        box-shadow: 0 22px 38px rgba(47, 109, 246, 0.15);
+      }
+
+      .plan-card h3 {
+        margin: 0 0 10px;
+        font-size: 1.05rem;
+      }
+
+      .plan-price {
+        font-size: 1.95rem;
+        margin: 0 0 18px;
+        color: var(--accent-strong);
+      }
+
+      .plan-meta {
+        color: var(--muted);
+        margin-bottom: 16px;
+      }
+
+      .plan-features {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 10px;
+        color: var(--muted);
+      }
+
+      .plan-features li::before {
+        content: "•";
+        color: var(--accent);
+        margin-right: 10px;
+      }
+
+      .pricing-form-panel {
+        margin-top: 38px;
+        display: grid;
+        gap: 24px;
+      }
+
+      .panel-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 28px;
+        box-shadow: var(--shadow);
+      }
+
+      .panel-card h3 {
+        margin: 0 0 14px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .form-group {
+        display: grid;
+        gap: 8px;
+      }
+
+      label {
+        font-weight: 600;
+      }
+
+      input,
+      .file-input {
+        width: 100%;
+        padding: 14px 16px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        background: var(--surface-2);
+        color: var(--text);
+      }
+
+      input:focus,
+      .file-input:focus-within {
+        outline: 3px solid rgba(47, 109, 246, 0.22);
+      }
+
+      .file-input {
+        position: relative;
+      }
+
+      .file-input input[type="file"] {
+        opacity: 0;
+        position: absolute;
+        inset: 0;
+        cursor: pointer;
+      }
+
+      .file-input span {
+        display: block;
+        padding: 14px 16px;
+        border-radius: 16px;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        color: var(--muted);
+      }
+
+      .summary-card {
+        background: linear-gradient(145deg, var(--surface), var(--surface-2));
+        border: 1px solid rgba(47, 109, 246, 0.16);
+        border-radius: 24px;
+        padding: 24px;
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(16, 33, 58, 0.08);
+      }
+
+      .card-entry {
+        margin-top: 24px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(16, 33, 58, 0.08);
+      }
+
+      .card-entry .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .payment-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .summary-row:last-child {
+        border-bottom: none;
+      }
+
+      .summary-row strong,
+      .summary-row span {
+        display: block;
+      }
+
+      .note-box {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 18px 20px;
+        color: var(--muted);
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      @media (max-width: 960px) {
+        .plan-grid,
+        .form-grid,
+        .grid-4,
+        .grid-3,
+        .timeline {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 680px) {
+        .nav-links,
+        .nav-actions .button-secondary {
+          display: none;
+        }
+
+        .hero,
+        .timeline,
+        .grid-3,
+        .grid-4,
+        .dual-card-grid,
+        .testimonial-grid,
+        .stats-grid,
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .section-head,
+        .legal {
+          flex-direction: column;
+          align-items: start;
+        }
+
+        .hero {
+          padding-top: 32px;
+        }
+      }
+      .card h3,
+      .card h4 {
+        margin: 0 0 8px;
+        font-size: 1.05rem;
+      }
+
+      .card p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .icon-badge {
+        width: 46px;
+        height: 46px;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        margin-bottom: 12px;
+      }
+
+      .timeline {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .timeline-step {
+        position: relative;
+        padding: 22px 18px 18px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border);
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .timeline-step::before {
+        content: attr(data-step);
+        display: inline-flex;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        align-items: center;
+        justify-content: center;
+        background: var(--accent);
+        color: white;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+
+      .dual-card-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .comparison-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        box-shadow: var(--shadow);
+      }
+
+      .comparison-card ul {
+        padding-left: 18px;
+        color: var(--muted);
+        margin: 14px 0 0;
+      }
+
+      .comparison-card li + li {
+        margin-top: 8px;
+      }
+
+      .testimonial-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .quote {
+        font-size: 1.02rem;
+        color: var(--text);
+      }
+
+      .person {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--success));
+        color: white;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+      }
+
+      .faq-item {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 0 18px;
+        box-shadow: var(--shadow);
+      }
+
+      .faq-question {
+        width: 100%;
+        background: none;
+        border: 0;
+        text-align: left;
+        padding: 18px 0;
+        font-weight: 600;
+        color: var(--text);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+      }
+
+      .faq-answer {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows var(--transition);
+      }
+
+      .faq-answer > div {
+        overflow: hidden;
+      }
+
+      .faq-item.is-open .faq-answer {
+        grid-template-rows: 1fr;
+      }
+
+      .faq-answer p {
+        margin: 0 0 16px;
+        color: var(--muted);
+      }
+
+      .footer {
+        background: linear-gradient(180deg, rgba(47, 109, 246, 0.06), transparent 30%);
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr 0.8fr 0.8fr;
+        gap: 16px;
+      }
+
+      .footer-column h4 {
+        font-size: 1rem;
+        margin: 0 0 12px;
+      }
+
+      .footer-column ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 8px;
+        color: var(--muted);
+      }
+
+      .footer-column a:hover {
+        color: var(--text);
+      }
+
+      .legal {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        color: var(--muted);
+        margin-top: 24px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      @media (max-width: 900px) {
+        .hero,
+        .timeline,
+        .grid-3,
+        .grid-4,
+        .testimonial-grid,
+        .footer-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .dual-card-grid,
+        .stats-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 680px) {
+        .nav-links,
+        .nav-actions .button-secondary {
+          display: none;
+        }
+
+        .hero,
+        .timeline,
+        .grid-3,
+        .grid-4,
+        .dual-card-grid,
+        .testimonial-grid,
+        .stats-grid,
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .section-head,
+        .legal {
+          flex-direction: column;
+          align-items: start;
+        }
+
+        .hero {
+          padding-top: 32px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="header">
+      <div class="container nav-bar">
+        <a href="#" class="brand" aria-label="TaxOFF home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="10" y="11" width="44" height="42" rx="12" fill="url(#taxoffGradient)" />
+              <path d="M20 38L29 25L36 33L46 20" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+              <defs>
+                <linearGradient id="taxoffGradient" x1="13" y1="16" x2="50" y2="50" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#2F6DF6" />
+                  <stop offset="1" stop-color="#0D9C73" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </span>
+          <span>TaxOFF</span>
+        </a>
+
+        <nav class="nav-links" aria-label="Primary navigation">
+          <a href="#services">Services</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#how-it-works">How it works</a>
+          <a href="#faq">FAQ</a>
+          <a href="#about">About</a>
+        </nav>
+
+        <div class="nav-actions">
+          <button class="theme-toggle" type="button" id="themeToggle" aria-label="Toggle color theme">
+            <span aria-hidden="true">☀︎</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="container hero" aria-labelledby="hero-title">
+        <div>
+          <div class="eyebrow">Expert-guided tax support for modern India</div>
+          <h1 id="hero-title">File smarter and stay ahead of every deadline.</h1>
+          <p>
+            TaxOFF combines guided filing, proactive reminders, and a calm support team so individuals and growing businesses can move from paperwork to confidence without the stress.
+          </p>
+          <div class="hero-actions">
+            <a href="#" class="button button-primary">Book a consultation</a>
+            <a href="#services" class="button button-secondary">Explore services</a>
+          </div>
+          <div class="trust-row" aria-label="Social proof">
+            <span class="pill">✓ Guided by tax specialists</span>
+            <span class="pill">✓ Built for salaried, freelance, and startup needs</span>
+          </div>
+        </div>
+        <div class="hero-card" aria-label="Illustrated workspace preview">
+          <div class="hero-orbit">
+            <div class="orbit-row">
+              <div>
+                <strong>Tax readiness snapshot</strong>
+                <div class="muted">Personal + business workflows in one place</div>
+              </div>
+              <span class="chip">Live review</span>
+            </div>
+            <div class="orbit-row">
+              <div>
+                <strong>Document checklist</strong>
+                <div class="muted">Secure uploads, validation, and reminders</div>
+              </div>
+              <span class="chip">Secure</span>
+            </div>
+            <div class="orbit-row">
+              <div>
+                <strong>Compliance calendar</strong>
+                <div class="muted">Advance notices and filing timelines</div>
+              </div>
+              <span class="chip">Smart</span>
+            </div>
+            <div class="orbit-row">
+              <div>
+                <strong>Support handoff</strong>
+                <div class="muted">A human expert can step in when questions arise</div>
+              </div>
+              <span class="chip">Assisted</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="container stats-strip" aria-label="Key product highlights">
+        <div class="stats-grid">
+          <article class="stat-card">
+            <div class="stat-number">100K+ guided filings</div>
+            <div class="muted">Sample data placeholder for product scale</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-number">4.9/5 sample review score</div>
+            <div class="muted">Placeholder rating shown in onboarding flows</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-number">Round-the-clock support</div>
+            <div class="muted">Assistance across notices, returns, and filing questions</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-number">Secure workflow controls</div>
+            <div class="muted">Encrypted document handling and audit-ready records</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="container section" id="pricing">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Self-filing pricing</div>
+            <h2>Choose your plan and pay securely with debit card or UPI.</h2>
+          </div>
+          <p>Select a plan below, fill the quick form, and you’ll see exactly how to proceed at checkout.</p>
+        </div>
+        <div class="plan-grid">
+          <article class="plan-card" role="button" tabindex="0" data-plan="Salary + 1 House property Plan" data-price="699">
+            <h3>Salary + 1 House property Plan</h3>
+            <p class="plan-price">₹699 / year</p>
+            <p class="plan-meta">Suitable for salaried taxpayers with one house property.</p>
+            <ul class="plan-features">
+              <li>Single & Multiple Employers</li>
+              <li>Single House Property</li>
+              <li>Income from Other Sources</li>
+              <li>Agriculture Income</li>
+            </ul>
+          </article>
+          <article class="plan-card" role="button" tabindex="0" data-plan="Salary + more than 1 House property" data-price="799">
+            <h3>Salary + more than 1 House property</h3>
+            <p class="plan-price">₹799 / year</p>
+            <p class="plan-meta">Suitable for income from multiple house properties.</p>
+            <ul class="plan-features">
+              <li>Single & Multiple Employers</li>
+              <li>Multiple House Property</li>
+              <li>Income from Other Sources</li>
+              <li>Agriculture Income</li>
+            </ul>
+          </article>
+          <article class="plan-card" role="button" tabindex="0" data-plan="Business & Professional Plan" data-price="1599">
+            <h3>Business & Professional Plan</h3>
+            <p class="plan-price">₹1,599 / year</p>
+            <p class="plan-meta">Suitable for business or professional income (non audit).</p>
+            <ul class="plan-features">
+              <li>Single & Multiple Employers</li>
+              <li>Single & Multiple House Property</li>
+              <li>Business & Professional Income (Non Audit) - Without B/S P/L</li>
+              <li>Income from Other Sources</li>
+              <li>Agriculture Income</li>
+            </ul>
+          </article>
+          <article class="plan-card" role="button" tabindex="0" data-plan="Capital Gain Plan" data-price="1999">
+            <h3>Capital Gain Plan</h3>
+            <p class="plan-price">₹1,999 / year</p>
+            <p class="plan-meta">Suitable for multiple capital gain income with additional sources.</p>
+            <ul class="plan-features">
+              <li>Single & Multiple Employers</li>
+              <li>Single & Multiple House Property</li>
+              <li>Multiple Capital Gain Income</li>
+              <li>Business & Professional Income (Non Audit) - Without B/S P/L</li>
+              <li>Income from Other Sources</li>
+              <li>Agriculture Income</li>
+            </ul>
+          </article>
+          <article class="plan-card" role="button" tabindex="0" data-plan="Future & Options" data-price="2999">
+            <h3>Future & Options</h3>
+            <p class="plan-price">₹2,999 / year</p>
+            <p class="plan-meta">Suitable for derivatives and mixed income filing.</p>
+            <ul class="plan-features">
+              <li>F&O Income/Loss (Non Audit)</li>
+              <li>Speculative Income</li>
+              <li>Single & Multiple Employers</li>
+              <li>Single & Multiple House Property</li>
+              <li>Multiple Capital Gain Income</li>
+              <li>Income from Other Sources</li>
+              <li>Business & Professional Income (Non Audit) - Without B/S P/L</li>
+              <li>Agriculture Income</li>
+            </ul>
+          </article>
+          <article class="plan-card" role="button" tabindex="0" data-plan="Crypto Currency Plan" data-price="2999">
+            <h3>Crypto Currency Plan</h3>
+            <p class="plan-price">₹2,999 / year</p>
+            <p class="plan-meta">Suitable for crypto, F&O, and capital gain income.</p>
+            <ul class="plan-features">
+              <li>Crypto Income</li>
+              <li>F&O Income/Loss (Non Audit)</li>
+              <li>Speculative Income</li>
+              <li>Single & Multiple Employers</li>
+              <li>Single & Multiple House Property</li>
+              <li>Multiple Capital Gain Income</li>
+              <li>Business & Professional Income (Non Audit) - Without B/S P/L</li>
+              <li>Income from Other Sources</li>
+              <li>Agriculture Income</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="pricing-form-panel" id="plan-booking">
+          <div class="panel-card" aria-live="polite">
+            <div class="section-label">Plan selected</div>
+            <h3 id="selected-plan-heading">No plan selected yet</h3>
+            <p class="muted" id="selected-plan-description">Click any plan card to view the booking form and payment instructions.</p>
+          </div>
+
+          <div class="panel-card hidden" id="checkout-panel">
+            <div class="section-label">Payment details</div>
+            <div class="summary-card">
+              <div class="summary-row">
+                <span>Plan name</span>
+                <strong id="summary-plan-name">—</strong>
+              </div>
+              <div class="summary-row">
+                <span>Total price</span>
+                <strong id="summary-original-price">—</strong>
+              </div>
+              <div class="summary-row">
+                <span>Total payable</span>
+                <strong id="summary-pay-now">—</strong>
+              </div>
+            </div>
+            <div class="note-box">
+              <strong>Proceed with payment:</strong> use Debit Card or UPI portal to complete the full plan purchase.
+            </div>
+          </div>
+
+          <div class="panel-card hidden" id="form-panel">
+            <div class="section-label">Booking form</div>
+            <h3>Tell us your details</h3>
+            <p class="muted">We will record the selected plan and send plan confirmation to <strong>ca.ravikedia@gmail.com</strong> or iMessage at <strong>+91 98599 35088</strong>.</p>
+            <form id="pricing-form" autocomplete="on">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="fullName">Full Name</label>
+                  <input id="fullName" name="fullName" type="text" placeholder="Enter full name" required />
+                </div>
+                <div class="form-group">
+                  <label for="phoneNumber">Phone Number</label>
+                  <input id="phoneNumber" name="phoneNumber" type="tel" placeholder="+91 98765 43210" required />
+                </div>
+                <div class="form-group">
+                  <label for="emailId">Email ID</label>
+                  <input id="emailId" name="emailId" type="email" placeholder="name@example.com" required />
+                </div>
+                <div class="form-group">
+                  <label for="panNumber">PAN Card Number</label>
+                  <input id="panNumber" name="panNumber" type="text" placeholder="ABCDE1234F" maxlength="10" required />
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <div class="form-group file-input">
+                  <label for="form16Upload">Upload Form 16</label>
+                  <span id="form16Label">No file chosen</span>
+                  <input id="form16Upload" name="form16Upload" type="file" accept=".pdf,.jpg,.png" required />
+                </div>
+                <div class="form-group file-input">
+                  <label for="otherUpload">Upload Other Documents</label>
+                  <span id="otherLabel">Optional file upload</span>
+                  <input id="otherUpload" name="otherUpload" type="file" accept=".pdf,.jpg,.png" />
+                </div>
+              </div>
+
+              <button type="submit" class="button button-primary">Proceed to payment</button>
+            </form>
+          </div>
+
+          <div class="panel-card hidden" id="payment-panel">
+            <div class="section-label">Payment portal</div>
+            <h3>Complete payment</h3>
+            <p class="muted">Choose Debit Card or UPI to pay the full plan amount and finalize your booking.</p>
+            <div class="summary-card" style="margin-top: 18px;">
+              <div class="summary-row">
+                <span>Plan selected</span>
+                <strong id="payment-plan-name">—</strong>
+              </div>
+              <div class="summary-row">
+                <span>Total payable</span>
+                <strong id="payment-now">—</strong>
+              </div>
+            </div>
+            <div class="payment-buttons">
+              <button type="button" class="button button-secondary" id="pay-card">Pay with card</button>
+              <button type="button" class="button button-secondary" id="pay-upi">Pay with UPI</button>
+            </div>
+            <div class="card-entry hidden" id="payment-action-panel">
+              <div class="section-label" id="payment-method-label">Payment method</div>
+              <p class="muted" id="payment-method-message">Select a method to start secure gateway checkout.</p>
+            </div>
+            <div class="note-box">
+              <strong>Note:</strong> Payment uses Razorpay hosted checkout. This is currently set to test mode with a demo key.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="container section" id="about">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Why TaxOFF</div>
+            <h2>Tax help that feels calm, clear, and modern.</h2>
+          </div>
+          <p>Designed for busy lives, not dense tax forms.</p>
+        </div>
+        <div class="grid-4">
+          <article class="card">
+            <div class="icon-badge" aria-hidden="true">✦</div>
+            <h3>Guided from the first click</h3>
+            <p>Plain-language prompts replace confusing jargon, keeping setup simple and confidence high.</p>
+          </article>
+          <article class="card">
+            <div class="icon-badge" aria-hidden="true">◌</div>
+            <h3>Built for changing work</h3>
+            <p>Whether you are salaried, freelance, or scaling a startup, the experience adapts to your workflow.</p>
+          </article>
+          <article class="card">
+            <div class="icon-badge" aria-hidden="true">⌁</div>
+            <h3>Proactive reminders</h3>
+            <p>Stay aware of upcoming deadlines, missing documents, and next best actions with minimal effort.</p>
+          </article>
+          <article class="card">
+            <div class="icon-badge" aria-hidden="true">▣</div>
+            <h3>Support that feels human</h3>
+            <p>Switch between self-service and expert-assisted support whenever the situation gets more complex.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="container section" id="how-it-works">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">How it works</div>
+            <h2>Four steps from confusion to confidence.</h2>
+          </div>
+          <p>A thoughtful process designed for quick momentum.</p>
+        </div>
+        <div class="timeline">
+          <article class="timeline-step" data-step="1">
+            <h3>Choose your path</h3>
+            <p>Select self-filing or assisted filing based on your comfort level and timeline.</p>
+          </article>
+          <article class="timeline-step" data-step="2">
+            <h3>Upload and review</h3>
+            <p>Securely share documents and let the platform validate what is needed before you proceed.</p>
+          </article>
+          <article class="timeline-step" data-step="3">
+            <h3>Prepare with guidance</h3>
+            <p>Get suggestions, reminders, and a clear checklist tailored to your situation.</p>
+          </article>
+          <article class="timeline-step" data-step="4">
+            <h3>File with confidence</h3>
+            <p>Submit, track progress, and keep your records organized for future questions or notices.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="container section">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Choose your filing style</div>
+            <h2>Flexible assistance for every kind of tax journey.</h2>
+          </div>
+          <p>Switch between self-led and expert-led paths without friction.</p>
+        </div>
+        <div class="dual-card-grid">
+          <article class="comparison-card">
+            <h3>Self-filing</h3>
+            <p>For professionals who want fast, structured guidance without waiting for a specialist.</p>
+            <ul>
+              <li>Step-by-step flows with clear prompts</li>
+              <li>Document readiness checks</li>
+              <li>Built-in deadline reminders</li>
+            </ul>
+            <div class="hero-actions">
+              <a href="#" class="button button-primary">Start self-filing</a>
+            </div>
+          </article>
+          <article class="comparison-card">
+            <h3>Assisted filing</h3>
+            <p>For complex questions, business filings, or anyone who wants a human review before submitting.</p>
+            <ul>
+              <li>Direct support from a tax specialist</li>
+              <li>Review of forms before submission</li>
+              <li>Notice and compliance support</li>
+            </ul>
+            <div class="hero-actions">
+              <a href="#" class="button button-secondary">Talk to an expert</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="container section" id="services">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">For individuals</div>
+            <h2>Support that keeps personal tax filing simple.</h2>
+          </div>
+          <p>Coverage for your common filing moments and obligations.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <h3>Salary returns</h3>
+            <p>Organize documents, check deductions, and review your return before submission.</p>
+          </article>
+          <article class="card">
+            <h3>Freelance income</h3>
+            <p>Collect business expenses and maintain a clean audit trail without spreadsheet overload.</p>
+          </article>
+          <article class="card">
+            <h3>Notice help</h3>
+            <p>Receive structured guidance when a notice, mismatch, or clarification arrives.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="container section">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">For startups and small businesses</div>
+            <h2>Compliance support that grows with your company.</h2>
+          </div>
+          <p>From registrations to recurring filings, everything stays organized.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <h3>Business registration</h3>
+            <p>Start with the right setup and keep your compliance calendar visible from day one.</p>
+          </article>
+          <article class="card">
+            <h3>GST services</h3>
+            <p>Track returns, plan filings, and prepare for review with guided support and reminders.</p>
+          </article>
+          <article class="card">
+            <h3>Tax calculator</h3>
+            <p>Estimate obligations early and avoid surprises before the next filing cycle.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="container section">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Testimonials</div>
+            <h2>Trusted by people who value clarity over complexity.</h2>
+          </div>
+          <p>Original placeholder feedback for the new experience.</p>
+        </div>
+        <div class="testimonial-grid">
+          <article class="card">
+            <p class="quote">“The platform felt calm and clear from the start. I knew exactly what I needed to prepare.”</p>
+            <div class="person">
+              <div class="avatar">AN</div>
+              <div>
+                <strong>Asha N.</strong><br />
+                <span class="muted">Product designer</span>
+              </div>
+            </div>
+          </article>
+          <article class="card">
+            <p class="quote">“As a freelancer, TaxOFF made my filing process feel less reactive and far more organized.”</p>
+            <div class="person">
+              <div class="avatar">RK</div>
+              <div>
+                <strong>Raghav K.</strong><br />
+                <span class="muted">Independent consultant</span>
+              </div>
+            </div>
+          </article>
+          <article class="card">
+            <p class="quote">“The assisted option gave me confidence before I submitted anything for my startup.”</p>
+            <div class="person">
+              <div class="avatar">MS</div>
+              <div>
+                <strong>Mira S.</strong><br />
+                <span class="muted">Startup founder</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="container section">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Security and compliance</div>
+            <h2>Protection built into every step.</h2>
+          </div>
+          <p>Modern controls and review-friendly records.</p>
+        </div>
+        <div class="grid-4">
+          <article class="card">
+            <h3>Encrypted uploads</h3>
+            <p>Secure file transfer with role-based access and protected document storage.</p>
+          </article>
+          <article class="card">
+            <h3>Audit trails</h3>
+            <p>Every action is logged so your records remain easy to review later.</p>
+          </article>
+          <article class="card">
+            <h3>Regulatory-ready</h3>
+            <p>Built with a compliance-first structure for notice responses and recurring filings.</p>
+          </article>
+          <article class="card">
+            <h3>Support escalation</h3>
+            <p>Move from self-service to expert review when the detail level increases.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="container section" id="faq">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">FAQ</div>
+            <h2>Questions we hear most often.</h2>
+          </div>
+          <p>Clear answers for first-time and returning users.</p>
+        </div>
+        <div class="faq-list" role="list">
+          <div class="faq-item is-open" role="listitem">
+            <button class="faq-question" type="button" aria-expanded="true">
+              <span>Do I need professional help for every filing?</span>
+              <span aria-hidden="true">+</span>
+            </button>
+            <div class="faq-answer">
+              <div>
+                <p>No. TaxOFF supports both self-led filing and assisted help, so you can choose the level of support that fits your situation.</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item" role="listitem">
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span>Can I use TaxOFF for startup compliance?</span>
+              <span aria-hidden="true">+</span>
+            </button>
+            <div class="faq-answer">
+              <div>
+                <p>Yes. The platform includes onboarding, document organization, and guided support for recurring business obligations.</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item" role="listitem">
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span>What happens if I receive a notice?</span>
+              <span aria-hidden="true">+</span>
+            </button>
+            <div class="faq-answer">
+              <div>
+                <p>You can escalate to an expert review and receive structured next steps without starting from scratch.</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item" role="listitem">
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span>Is my information protected?</span>
+              <span aria-hidden="true">+</span>
+            </button>
+            <div class="faq-answer">
+              <div>
+                <p>Yes. TaxOFF uses encrypted upload flows, access controls, and review-friendly records to support secure handling.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-column">
+            <a href="#" class="brand" aria-label="TaxOFF home">
+              <span class="brand-mark" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="10" y="11" width="44" height="42" rx="12" fill="url(#footerGradient)" />
+                  <path d="M20 38L29 25L36 33L46 20" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+                  <defs>
+                    <linearGradient id="footerGradient" x1="13" y1="16" x2="50" y2="50" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#2F6DF6" />
+                      <stop offset="1" stop-color="#0D9C73" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </span>
+              <span>TaxOFF</span>
+            </a>
+            <p style="margin: 12px 0 0; color: var(--muted);">
+              Premium guidance for modern filing, compliance, and notice support in India.
+            </p>
+          </div>
+          <div class="footer-column">
+            <h4>Company</h4>
+            <ul>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Pricing</a></li>
+              <li><a href="#">Blog</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>Services</h4>
+            <ul>
+              <li><a href="#">GST Services</a></li>
+              <li><a href="#">Notice Help</a></li>
+              <li><a href="#">Business Registration</a></li>
+              <li><a href="#">Tax Calculator</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>Support</h4>
+            <ul>
+              <li><a href="#">Support</a></li>
+              <li><a href="#">Security</a></li>
+              <li><a href="#">hello@taxoff.example</a></li>
+              <li><a href="#">+91 98765 43210</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="legal">
+          <span>© 2026 TaxOFF. All rights reserved.</span>
+          <span><a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Accessibility</a></span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+      const themeToggle = document.getElementById('themeToggle');
+      const root = document.documentElement;
+      const icon = themeToggle?.querySelector('span');
+
+      const applyTheme = (theme) => {
+        root.setAttribute('data-theme', theme);
+        if (icon) {
+          icon.textContent = theme === 'dark' ? '☾' : '☀︎';
+        }
+      };
+
+      const storedTheme = localStorage.getItem('taxoff-theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      applyTheme(storedTheme || (prefersDark ? 'dark' : 'light'));
+
+      themeToggle?.addEventListener('click', () => {
+        const nextTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        applyTheme(nextTheme);
+        localStorage.setItem('taxoff-theme', nextTheme);
+      });
+
+      document.querySelectorAll('.faq-item').forEach((item) => {
+        const button = item.querySelector('.faq-question');
+        button?.addEventListener('click', () => {
+          const isOpen = item.classList.contains('is-open');
+          document.querySelectorAll('.faq-item').forEach((faq) => {
+            faq.classList.remove('is-open');
+            const faqButton = faq.querySelector('.faq-question');
+            if (faqButton) {
+              faqButton.setAttribute('aria-expanded', 'false');
+            }
+          });
+
+          if (!isOpen) {
+            item.classList.add('is-open');
+            button.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+
+      const planCards = document.querySelectorAll('.plan-card');
+      const checkoutPanel = document.getElementById('checkout-panel');
+      const formPanel = document.getElementById('form-panel');
+      const paymentPanel = document.getElementById('payment-panel');
+      const selectedPlanHeading = document.getElementById('selected-plan-heading');
+      const selectedPlanDescription = document.getElementById('selected-plan-description');
+      const summaryPlanName = document.getElementById('summary-plan-name');
+      const summaryOriginalPrice = document.getElementById('summary-original-price');
+      const summaryPayNow = document.getElementById('summary-pay-now');
+      const paymentPlanName = document.getElementById('payment-plan-name');
+      const paymentNow = document.getElementById('payment-now');
+      const form16Label = document.getElementById('form16Label');
+      const otherLabel = document.getElementById('otherLabel');
+      const pricingForm = document.getElementById('pricing-form');
+      const payCardButton = document.getElementById('pay-card');
+      const payUpiButton = document.getElementById('pay-upi');
+      const paymentActionPanel = document.getElementById('payment-action-panel');
+      const paymentMethodLabel = document.getElementById('payment-method-label');
+      const paymentMethodMessage = document.getElementById('payment-method-message');
+
+      let selectedPlan = null;
+      let selectedAmount = 0;
+      let selectedPaymentMethod = null;
+
+      const formatCurrency = (value) => {
+        return `₹${value.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      };
+
+      const updateSummary = (plan, price) => {
+        selectedPlanHeading.textContent = plan;
+        selectedPlanDescription.textContent = `The selected plan is ${plan}. Use the form below to confirm your details and proceed with debit card or UPI payment.`;
+        summaryPlanName.textContent = plan;
+        summaryOriginalPrice.textContent = formatCurrency(price);
+        summaryPayNow.textContent = formatCurrency(price);
+        paymentPlanName.textContent = plan;
+        paymentNow.textContent = formatCurrency(price);
+
+        checkoutPanel.classList.remove('hidden');
+        formPanel.classList.remove('hidden');
+        paymentPanel.classList.add('hidden');
+        if (paymentActionPanel) paymentActionPanel.classList.add('hidden');
+      };
+
+      planCards.forEach((card) => {
+        const selectPlan = () => {
+          selectedPlan = card.dataset.plan;
+          selectedAmount = Number(card.dataset.price);
+          updateSummary(selectedPlan, selectedAmount);
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        };
+
+        card.addEventListener('click', selectPlan);
+        card.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            selectPlan();
+          }
+        });
+      });
+
+      document.getElementById('form16Upload').addEventListener('change', (event) => {
+        const fileName = event.target.files?.[0]?.name || 'No file chosen';
+        form16Label.textContent = fileName;
+      });
+
+      document.getElementById('otherUpload').addEventListener('change', (event) => {
+        const fileName = event.target.files?.[0]?.name || 'Optional file upload';
+        otherLabel.textContent = fileName;
+      });
+
+      const openCheckout = (method) => {
+        if (!selectedAmount || !selectedPlan) {
+          alert('Please select a plan and complete the form before paying.');
+          return;
+        }
+
+        const formData = new FormData(pricingForm);
+        const prefill = {
+          name: formData.get('fullName')?.toString() || '',
+          email: formData.get('emailId')?.toString() || '',
+          contact: formData.get('phoneNumber')?.toString() || '',
+        };
+
+        const options = {
+          key: 'rzp_test_1DP5mmOlF5G5ag',
+          amount: selectedAmount * 100,
+          currency: 'INR',
+          name: 'TaxOFF',
+          description: selectedPlan,
+          image: 'https://dummyimage.com/80x80/2f7ff4/ffffff&text=T',
+          handler: function (response) {
+            paymentMethodMessage.textContent = `Payment successful. Payment ID: ${response.razorpay_payment_id}`;
+            paymentMethodMessage.style.color = 'var(--success)';
+          },
+          prefill,
+          notes: {
+            plan: selectedPlan,
+            method,
+          },
+          theme: {
+            color: '#2f7ff4',
+          },
+          modal: {
+            ondismiss: function () {
+              paymentMethodMessage.textContent = 'Payment window closed without completing payment.';
+              paymentMethodMessage.style.color = 'var(--text)';
+            },
+          },
+        };
+
+        if (method === 'upi') {
+          options.method = { upi: true };
+        } else {
+          options.method = { card: true, netbanking: true, upi: true };
+        }
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+      };
+
+      const setPaymentMethod = (method) => {
+        selectedPaymentMethod = method;
+        if (paymentActionPanel) paymentActionPanel.classList.remove('hidden');
+        if (paymentMethodLabel) paymentMethodLabel.textContent = method === 'upi' ? 'Pay with UPI' : 'Pay with card';
+        if (paymentMethodMessage) {
+          paymentMethodMessage.textContent = method === 'upi'
+            ? 'Launching UPI checkout.'
+            : 'Launching card checkout.';
+        }
+        openCheckout(method);
+      };
+
+      if (payCardButton) {
+        payCardButton.addEventListener('click', () => setPaymentMethod('card'));
+      }
+
+      if (payUpiButton) {
+        payUpiButton.addEventListener('click', () => setPaymentMethod('upi'));
+      }
+
+      pricingForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (!selectedPlan) {
+          alert('Please select a plan before submitting the form.');
+          return;
+        }
+        paymentPanel.classList.remove('hidden');
+        if (paymentActionPanel) paymentActionPanel.classList.add('hidden');
+        paymentPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    </script>
+  </body>
+</html>
