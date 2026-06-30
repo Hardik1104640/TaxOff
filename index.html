@@ -82,6 +82,10 @@
         max-width: 100%;
       }
 
+      .testimonial-grid {
+        display: none !important;
+      }
+
       button,
       input,
       select,
@@ -875,35 +879,15 @@
             <span class="pill">✓ Built for salaried, freelance, and startup needs</span>
           </div>
         </div>
-        <div class="hero-card" aria-label="Illustrated workspace preview">
-          <div class="hero-orbit">
-            <div class="orbit-row">
-              <div>
-                <strong>Tax readiness snapshot</strong>
-                <div class="muted">Personal + business workflows in one place</div>
-              </div>
-              <span class="chip">Live review</span>
-            </div>
-            <div class="orbit-row">
-              <div>
-                <strong>Document checklist</strong>
-                <div class="muted">Secure uploads, validation, and reminders</div>
-              </div>
-              <span class="chip">Secure</span>
-            </div>
-            <div class="orbit-row">
-              <div>
-                <strong>Compliance calendar</strong>
-                <div class="muted">Advance notices and filing timelines</div>
-              </div>
-              <span class="chip">Smart</span>
-            </div>
-            <div class="orbit-row">
-              <div>
-                <strong>Support handoff</strong>
-                <div class="muted">A human expert can step in when questions arise</div>
-              </div>
-              <span class="chip">Assisted</span>
+        <div class="hero-card" aria-label="Contact information">
+          <div class="hero-orbit" style="text-align: center;">
+            <h3 style="margin-top: 0; color: var(--accent);">Questions? Get in touch</h3>
+            <p style="color: var(--muted); font-size: 16px; line-height: 1.8; margin: 20px 0;">
+              Have questions? Message us directly on iMessage at <strong>+91 98599 35088</strong> and we'll help you right away.
+            </p>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
+              <a href="imessage://+919859935088" class="button button-primary">Message on iMessage</a>
+              <a href="#pricing" class="button button-secondary">View plans</a>
             </div>
           </div>
         </div>
@@ -912,12 +896,12 @@
       <section class="container stats-strip" aria-label="Key product highlights">
         <div class="stats-grid">
           <article class="stat-card">
-            <div class="stat-number">100K+ guided filings</div>
-            <div class="muted">Sample data placeholder for product scale</div>
+            <div class="stat-number">Tax Returns</div>
+            <div class="muted">Professional filing guidance for all income types</div>
           </article>
           <article class="stat-card">
-            <div class="stat-number">4.9/5 sample review score</div>
-            <div class="muted">Placeholder rating shown in onboarding flows</div>
+            <div class="stat-number">GST Services</div>
+            <div class="muted">Quarterly and monthly return support</div>
           </article>
           <article class="stat-card">
             <div class="stat-number">Round-the-clock support</div>
@@ -1070,7 +1054,7 @@
           <div class="panel-card hidden" id="form-panel">
             <div class="section-label">Booking form</div>
             <h3>Tell us your details</h3>
-            <p class="muted">We will record the selected plan and send plan confirmation to <strong>ca.ravikedia@gmail.com</strong> or iMessage at <strong>+91 98599 35088</strong>.</p>
+            <p class="muted">After payment, message us on iMessage at <strong>+91 98599 35088</strong> with your receipt to confirm your booking and get started.</p>
             <form id="pricing-form" autocomplete="on">
               <div class="form-grid">
                 <div class="form-group">
@@ -1286,10 +1270,10 @@
       <section class="container section">
         <div class="section-head">
           <div>
-            <div class="eyebrow">Testimonials</div>
-            <h2>Trusted by people who value clarity over complexity.</h2>
+            <div class="eyebrow">Need Help?</div>
+            <h2>Message us directly on iMessage.</h2>
           </div>
-          <p>Original placeholder feedback for the new experience.</p>
+          <p>We're here to help with any questions about your filing, plans, or next steps.</p>
         </div>
         <div class="testimonial-grid">
           <article class="card">
@@ -1453,10 +1437,9 @@
           <div class="footer-column">
             <h4>Support</h4>
             <ul>
-              <li><a href="#">Support</a></li>
-              <li><a href="#">Security</a></li>
-              <li><a href="#">hello@taxoff.example</a></li>
-              <li><a href="#">+91 98765 43210</a></li>
+              <li><a href="imessage://+919859935088">Message on iMessage</a></li>
+              <li><a href="#pricing">View Plans</a></li>
+              <li><a href="#faq">FAQ</a></li>
             </ul>
           </div>
         </div>
@@ -1712,7 +1695,11 @@
           }
 
           const rzp = new Razorpay(options);
-          rzp.open();
+          if (typeof rzp.open === 'function') {
+            rzp.open();
+          } else {
+            throw new Error('Razorpay checkout not available. Please try again.');
+          }
         } catch (error) {
           if (paymentMethodMessage) {
             paymentMethodMessage.textContent = `Unable to start checkout: ${error.message}`;
@@ -1757,6 +1744,17 @@
         paymentPanel.classList.remove('hidden');
         if (paymentActionPanel) paymentActionPanel.classList.add('hidden');
         paymentPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+
+      // Mobile payment handler with Razorpay script check
+      window.addEventListener('load', () => {
+        if (typeof Razorpay === 'undefined') {
+          console.warn('Razorpay script not loaded. Retrying...');
+          const script = document.createElement('script');
+          script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+          script.onload = () => console.log('Razorpay loaded');
+          document.head.appendChild(script);
+        }
       });
     </script>
   </body>
