@@ -1513,9 +1513,15 @@
       let selectedPlan = null;
       let selectedAmount = 0;
       let selectedPaymentMethod = null;
-      const apiBaseUrl = 'http://127.0.0.1:3000';
+      const localHostnames = ['127.0.0.1', 'localhost'];
+      const apiBaseUrl = localHostnames.includes(window.location.hostname) ? '' : 'http://127.0.0.1:3000';
 
-      const apiUrl = (path) => `${apiBaseUrl}${path}`;
+      const apiUrl = (path) => {
+        if (path.startsWith('http://') || path.startsWith('https://')) {
+          return path;
+        }
+        return `${apiBaseUrl}${path}`;
+      };
 
       const formatCurrency = (value) => {
         return `₹${value.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
