@@ -1513,15 +1513,9 @@
       let selectedPlan = null;
       let selectedAmount = 0;
       let selectedPaymentMethod = null;
-      const apiBaseUrl = (() => {
-        if (window.location.protocol === 'file:') {
-          return 'http://127.0.0.1:3000';
-        }
-
-        const host = window.location.hostname;
-        const port = window.location.port || '3000';
-        return `${window.location.protocol}//${host}:${port}`;
-      })();
+      const apiBaseUrl = window.location.protocol === 'file:'
+        ? 'http://127.0.0.1:3000'
+        : window.location.origin;
 
       const apiUrl = (path) => {
         if (path.startsWith('http://') || path.startsWith('https://')) {
