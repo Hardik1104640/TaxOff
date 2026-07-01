@@ -1513,13 +1513,14 @@
       let selectedPlan = null;
       let selectedAmount = 0;
       let selectedPaymentMethod = null;
-      const localHostnames = ['127.0.0.1', 'localhost', '::1'];
       const apiBaseUrl = (() => {
-        if (localHostnames.includes(window.location.hostname)) {
-          return '';
+        if (window.location.protocol === 'file:') {
+          return 'http://127.0.0.1:3000';
         }
 
-        return `${window.location.protocol}//${window.location.hostname}:3000`;
+        const host = window.location.hostname;
+        const port = window.location.port || '3000';
+        return `${window.location.protocol}//${host}:${port}`;
       })();
 
       const apiUrl = (path) => {
@@ -1527,6 +1528,23 @@
           return path;
         }
         return `${apiBaseUrl}${path}`;
+      };
+
+      const fetchWithTimeout = async (url, options = {}, timeoutMs = 15000) => {
+        const controller = new AbortController();
+        const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+
+        try {
+          const response = await fetch(url, { ...options, signal: controller.signal });
+          return response;
+        } catch (error) {
+          if (error.name === 'AbortError') {
+            throw new Error('Request timed out. Ensure the backend is reachable at port 3000 from this device.');
+          }
+          throw error;
+        } finally {
+          window.clearTimeout(timeoutId);
+        }
       };
 
       const loadRazorpayScript = () => {
@@ -1603,7 +1621,7 @@
 
       const createOrder = async (orderAmount) => {
         const amountToSend = orderAmount != null ? orderAmount : selectedAmount * 100;
-        const response = await fetch(apiUrl('/api/create-order'), {
+        const response = await fetchWithTimeout(apiUrl('/api/create-order'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1624,7 +1642,7 @@
       };
 
       const verifyPayment = async (paymentDetails) => {
-        const response = await fetch(apiUrl('/api/verify-payment'), {
+        const response = await fetchWithTimeout(apiUrl('/api/verify-payment'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1641,7 +1659,7 @@
       };
 
       const sendBooking = async (bookingDetails) => {
-        const response = await fetch(apiUrl('/api/send-booking'), {
+        const response = await fetchWithTimeout(apiUrl('/api/send-booking'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1672,6 +1690,10 @@
           await loadRazorpayScript();
           const orderAmount = selectedAmount * 100;
           const orderData = await createOrder(orderAmount);
+
+          if (paymentMethodMessage) {
+            paymentMethodMessage.textContent = 'Secure order created. Opening checkout...';
+          }
           const formData = new FormData(pricingForm);
           const prefill = {
             name: formData.get('fullName')?.toString() || '',
@@ -1747,8 +1769,12 @@
             throw new Error('Razorpay checkout not available. Please try again.');
           }
         } catch (error) {
+          const message = error.name === 'AbortError'
+            ? 'Request timed out. Make sure your backend is running and your network is reachable.'
+            : error.message || 'Unable to start checkout.';
+
           if (paymentMethodMessage) {
-            paymentMethodMessage.textContent = `Unable to start checkout: ${error.message}`;
+            paymentMethodMessage.textContent = `Unable to start checkout: ${message}`;
             paymentMethodMessage.style.color = 'red';
           }
         }
