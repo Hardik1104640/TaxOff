@@ -883,10 +883,10 @@
           <div class="hero-orbit" style="text-align: center;">
             <h3 style="margin-top: 0; color: var(--accent);">Questions? Get in touch</h3>
             <p style="color: var(--muted); font-size: 16px; line-height: 1.8; margin: 20px 0;">
-              Have questions? Message us directly on iMessage at <strong>+91 98599 35088</strong> and we'll help you right away.
+              Have questions? Message us directly on iMessage at <strong>+91 79802 75060</strong> and we'll help you right away.
             </p>
             <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
-              <a href="imessage://+919859935088" class="button button-primary">Message on iMessage</a>
+              <a href="imessage://+917980275060" class="button button-primary">Message on iMessage</a>
               <a href="#pricing" class="button button-secondary">View plans</a>
             </div>
           </div>
@@ -1054,7 +1054,7 @@
           <div class="panel-card hidden" id="form-panel">
             <div class="section-label">Booking form</div>
             <h3>Tell us your details</h3>
-            <p class="muted">After payment, message us on iMessage at <strong>+91 98599 35088</strong> with your receipt to confirm your booking and get started.</p>
+            <p class="muted">After payment, message us on iMessage at <strong>+91 79802 75060</strong> with your receipt to confirm your booking and get started.</p>
             <form id="pricing-form" autocomplete="on">
               <div class="form-grid">
                 <div class="form-group">
@@ -1108,16 +1108,14 @@
               </div>
             </div>
             <div class="payment-buttons">
-              <button type="button" class="button button-secondary" id="pay-card">Pay with card</button>
-              <button type="button" class="button button-secondary" id="pay-upi">Pay with UPI</button>
-              <button type="button" class="button button-outline" id="pay-test">Pay ₹1 test</button>
+              <button type="button" class="button button-primary" id="pay-razorpay">Pay with Razorpay</button>
             </div>
             <div class="card-entry hidden" id="payment-action-panel">
               <div class="section-label" id="payment-method-label">Payment method</div>
               <p class="muted" id="payment-method-message">Select a method to start secure gateway checkout.</p>
             </div>
             <div class="note-box">
-              <strong>Payment portal:</strong> replace the current Razorpay test key with your Razorpay Key ID from your dashboard, and for live payments pass a server-created order ID to the checkout. The current page uses the selected plan name and the payable amount shown above.
+              <strong>Payment portal:</strong> pay securely through Razorpay. Your order is created on the server and checkout is handled safely.
             </div>
           </div>
         </div>
@@ -1437,7 +1435,7 @@
           <div class="footer-column">
             <h4>Support</h4>
             <ul>
-              <li><a href="imessage://+919859935088">Message on iMessage</a></li>
+              <li><a href="imessage://+917980275060">Message on iMessage</a></li>
               <li><a href="#pricing">View Plans</a></li>
               <li><a href="#faq">FAQ</a></li>
             </ul>
@@ -1507,9 +1505,7 @@
       const otherLabel = document.getElementById('otherLabel');
       const form16Note = document.getElementById('form16-note');
       const pricingForm = document.getElementById('pricing-form');
-      const payCardButton = document.getElementById('pay-card');
-      const payUpiButton = document.getElementById('pay-upi');
-      const payTestButton = document.getElementById('pay-test');
+      const payRazorpayButton = document.getElementById('pay-razorpay');
       const paymentActionPanel = document.getElementById('payment-action-panel');
       const paymentMethodLabel = document.getElementById('payment-method-label');
       const paymentMethodMessage = document.getElementById('payment-method-message');
@@ -1578,7 +1574,7 @@
         otherLabel.textContent = fileName;
       });
 
-      const createOrder = async (method, orderAmount) => {
+      const createOrder = async (orderAmount) => {
         const amountToSend = orderAmount != null ? orderAmount : selectedAmount * 100;
         const response = await fetch(apiUrl('/api/create-order'), {
           method: 'POST',
@@ -1589,7 +1585,6 @@
             plan: selectedPlan,
             amount: amountToSend,
             currency: 'INR',
-            method,
           }),
         });
 
@@ -1618,7 +1613,24 @@
         return response.json();
       };
 
-      const openCheckout = async (method) => {
+      const sendBooking = async (bookingDetails) => {
+        const response = await fetch(apiUrl('/api/send-booking'), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(bookingDetails),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(errorText || 'Unable to send booking email.');
+        }
+
+        return response.json();
+      };
+
+      const openCheckout = async () => {
         if (!selectedPlan) {
           alert('Please select a plan and complete the form before paying.');
           return;
@@ -1630,9 +1642,8 @@
         }
 
         try {
-          const isTestMode = method === 'test';
-          const orderAmount = isTestMode ? 100 : selectedAmount * 100;
-          const orderData = await createOrder(method, orderAmount);
+          const orderAmount = selectedAmount * 100;
+          const orderData = await createOrder(orderAmount);
           const formData = new FormData(pricingForm);
           const prefill = {
             name: formData.get('fullName')?.toString() || '',
@@ -1641,17 +1652,16 @@
           };
 
           const options = {
-            key: orderData.keyId || 'rzp_test_1DP5mmOlF5G5ag',
+            key: orderData.keyId,
             amount: orderData.amount,
             currency: orderData.currency,
             order_id: orderData.orderId,
             name: 'Tax Return Buddy',
-            description: isTestMode ? `${selectedPlan} (₹1 test transaction)` : selectedPlan,
+            description: selectedPlan,
             image: 'https://dummyimage.com/80x80/2f7ff4/ffffff&text=T',
             prefill,
             notes: {
               plan: selectedPlan,
-              method,
             },
             theme: {
               color: '#2f7ff4',
@@ -1673,26 +1683,34 @@
               try {
                 const verification = await verifyPayment(response);
                 if (verification.success) {
-                  paymentMethodMessage.textContent = `Payment verified. Payment ID: ${response.razorpay_payment_id}`;
+                  const formData = new FormData(pricingForm);
+                  const bookingBody = {
+                    fullName: formData.get('fullName')?.toString() || '',
+                    phoneNumber: formData.get('phoneNumber')?.toString() || '',
+                    emailId: formData.get('emailId')?.toString() || '',
+                    panNumber: formData.get('panNumber')?.toString() || '',
+                    plan: selectedPlan,
+                    amount: selectedAmount,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_order_id: response.razorpay_order_id,
+                  };
+
+                  await sendBooking(bookingBody);
+
+                  paymentMethodMessage.textContent = `Payment verified and booking email sent. Payment ID: ${response.razorpay_payment_id}`;
                   paymentMethodMessage.style.color = 'var(--success)';
                 } else {
                   paymentMethodMessage.textContent = 'Payment was captured, but verification failed. Please contact support.';
                   paymentMethodMessage.style.color = 'var(--text)';
                 }
               } catch (error) {
-                paymentMethodMessage.textContent = `Verification error: ${error.message}`;
-                paymentMethodMessage.style.color = 'var(--text)';
+                paymentMethodMessage.textContent = `Verification email error: ${error.message}`;
+                paymentMethodMessage.style.color = 'red';
               }
             },
           };
 
-          if (method === 'test') {
-            options.method = { card: true, upi: true, netbanking: true };
-          } else if (method === 'upi') {
-            options.method = { upi: true };
-          } else {
-            options.method = { card: true, netbanking: true, upi: true };
-          }
+          options.method = { card: true, netbanking: true, upi: true };
 
           const rzp = new Razorpay(options);
           if (typeof rzp.open === 'function') {
@@ -1708,31 +1726,16 @@
         }
       };
 
-      const setPaymentMethod = (method) => {
-        selectedPaymentMethod = method;
-        if (paymentActionPanel) paymentActionPanel.classList.remove('hidden');
-        if (paymentMethodLabel) paymentMethodLabel.textContent = method === 'upi' ? 'Pay with UPI' : method === 'card' ? 'Pay with card' : 'Pay ₹1 test';
-        if (paymentMethodMessage) {
-          paymentMethodMessage.textContent = method === 'upi'
-            ? 'Launching UPI checkout.'
-            : method === 'card'
-              ? 'Launching card checkout.'
-              : 'Launching ₹1 test checkout.';
-          paymentMethodMessage.style.color = 'var(--text)';
-        }
-        openCheckout(method);
-      };
-
-      if (payCardButton) {
-        payCardButton.addEventListener('click', () => setPaymentMethod('card'));
-      }
-
-      if (payUpiButton) {
-        payUpiButton.addEventListener('click', () => setPaymentMethod('upi'));
-      }
-
-      if (payTestButton) {
-        payTestButton.addEventListener('click', () => setPaymentMethod('test'));
+      if (payRazorpayButton) {
+        payRazorpayButton.addEventListener('click', async () => {
+          if (paymentActionPanel) paymentActionPanel.classList.remove('hidden');
+          if (paymentMethodLabel) paymentMethodLabel.textContent = 'Pay with Razorpay';
+          if (paymentMethodMessage) {
+            paymentMethodMessage.textContent = 'Launching Razorpay checkout.';
+            paymentMethodMessage.style.color = 'var(--text)';
+          }
+          await openCheckout();
+        });
       }
 
       pricingForm.addEventListener('submit', (event) => {

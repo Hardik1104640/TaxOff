@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const express = require('express');
 const cors = require('cors');
 const Razorpay = require('razorpay');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const app = express();
@@ -19,6 +20,26 @@ if (keyId && keySecret) {
   razorpay = new Razorpay({
     key_id: keyId,
     key_secret: keySecret,
+  });
+}
+
+const smtpHost = process.env.SMTP_HOST;
+const smtpPort = Number(process.env.SMTP_PORT || 587);
+const smtpSecure = process.env.SMTP_SECURE === 'true';
+const smtpUser = process.env.SMTP_USER;
+const smtpPass = process.env.SMTP_PASS;
+const emailTo = process.env.EMAIL_TO || smtpUser;
+
+let mailer = null;
+if (smtpHost && smtpUser && smtpPass) {
+  mailer = nodemailer.createTransport({
+    host: smtpHost,
+    port: smtpPort,
+    secure: smtpSecure,
+    auth: {
+      user: smtpUser,
+      pass: smtpPass,
+    },
   });
 }
 
@@ -80,6 +101,45 @@ app.post(['/verify-payment', '/api/verify-payment'], (req, res) => {
   }
 
   return res.status(400).json({ success: false, error: 'Payment verification failed.' });
+});
+
+app.post(['/send-booking', '/api/send-booking'], async (req, res) => {
+  if (!mailer) {
+    return res.status(500).json({ error: 'Email service is not configured. Add SMTP_HOST, SMTP_PORT, SMTP_USER, and SMTP_PASS to .env.' });
+  }
+
+  const {
+    fullName,
+    phoneNumber,
+    emailId,
+    panNumber,
+    plan,
+    amount,
+    razorpay_payment_id,
+    razorpay_order_id,
+  } = req.body;
+
+  if (!fullName || !emailId || !plan || !amount || !razorpay_payment_id || !razorpay_order_id) {
+    return res.status(400).json({ error: 'Missing booking or payment fields.' });
+  }
+
+  try {
+    const textBody = `New booking details:\n\nName: ${fullName}\nEmail: ${emailId}\nPhone: ${phoneNumber}\nPAN: ${panNumber}\nPlan: ${plan}\nAmount: ₹${amount}\nRazorpay Order ID: ${razorpay_order_id}\nRazorpay Payment ID: ${razorpay_payment_id}`;
+    const htmlBody = `<h2>New booking received</h2><ul><li><strong>Name:</strong> ${fullName}</li><li><strong>Email:</strong> ${emailId}</li><li><strong>Phone:</strong> ${phoneNumber}</li><li><strong>PAN:</strong> ${panNumber}</li><li><strong>Plan:</strong> ${plan}</li><li><strong>Amount:</strong> ₹${amount}</li><li><strong>Razorpay Order ID:</strong> ${razorpay_order_id}</li><li><strong>Razorpay Payment ID:</strong> ${razorpay_payment_id}</li></ul>`;
+
+    await mailer.sendMail({
+      from: smtpUser,
+      to: emailTo,
+      subject: `New TaxOFF booking: ${fullName}`,
+      text: textBody,
+      html: htmlBody,
+    });
+
+    return res.json({ success: true, message: 'Booking email sent successfully.' });
+  } catch (error) {
+    console.error('Failed to send booking email:', error.message || error);
+    return res.status(500).json({ error: 'Unable to send booking email.' });
+  }
 });
 
 app.get('/health', (req, res) => {
