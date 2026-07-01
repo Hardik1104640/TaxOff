@@ -1513,14 +1513,35 @@
       let selectedPlan = null;
       let selectedAmount = 0;
       let selectedPaymentMethod = null;
-      const localHostnames = ['127.0.0.1', 'localhost'];
-      const apiBaseUrl = localHostnames.includes(window.location.hostname) ? '' : 'http://127.0.0.1:3000';
+      const localHostnames = ['127.0.0.1', 'localhost', '::1'];
+      const apiBaseUrl = (() => {
+        if (localHostnames.includes(window.location.hostname)) {
+          return '';
+        }
+
+        return `${window.location.protocol}//${window.location.hostname}:3000`;
+      })();
 
       const apiUrl = (path) => {
         if (path.startsWith('http://') || path.startsWith('https://')) {
           return path;
         }
         return `${apiBaseUrl}${path}`;
+      };
+
+      const loadRazorpayScript = () => {
+        return new Promise((resolve, reject) => {
+          if (window.Razorpay) {
+            return resolve();
+          }
+
+          const script = document.createElement('script');
+          script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+          script.async = true;
+          script.onload = () => resolve();
+          script.onerror = () => reject(new Error('Unable to load Razorpay checkout script.'));
+          document.head.appendChild(script);
+        });
       };
 
       const formatCurrency = (value) => {
@@ -1648,6 +1669,7 @@
         }
 
         try {
+          await loadRazorpayScript();
           const orderAmount = selectedAmount * 100;
           const orderData = await createOrder(orderAmount);
           const formData = new FormData(pricingForm);
