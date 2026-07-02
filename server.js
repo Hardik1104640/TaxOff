@@ -125,29 +125,25 @@ app.post(['/send-booking', '/api/send-booking'], async (req, res) => {
   }
 
   try {
-    const textBody = `New booking details:\n\nName: ${fullName}\nEmail: ${emailId}\nPhone: ${phoneNumber}\nPAN: ${panNumber}\nPlan: ${plan}\nAmount: ₹${amount}\nRazorpay Order ID: ${razorpay_order_id}\nRazorpay Payment ID: ${razorpay_payment_id}`;
-    const htmlBody = `<h2>New booking received</h2><ul><li><strong>Name:</strong> ${fullName}</li><li><strong>Email:</strong> ${emailId}</li><li><strong>Phone:</strong> ${phoneNumber}</li><li><strong>PAN:</strong> ${panNumber}</li><li><strong>Plan:</strong> ${plan}</li><li><strong>Amount:</strong> ₹${amount}</li><li><strong>Razorpay Order ID:</strong> ${razorpay_order_id}</li><li><strong>Razorpay Payment ID:</strong> ${razorpay_payment_id}</li></ul>`;
-
-    await mailer.sendMail({
-      from: emailFrom,
-      to: emailTo,
-      subject: `New TaxOFF booking: ${fullName}`,
-      text: textBody,
-      html: htmlBody,
-    });
-
     const confirmationText = `Hi ${fullName},\n\nYour order for ${plan} has been successfully confirmed. Payment ID: ${razorpay_payment_id}. Order ID: ${razorpay_order_id}.\n\nWe are verifying your payment and booking details, and will contact you shortly with next steps.\n\nThank you for choosing Tax Return Buddy.`;
-    const confirmationHtml = `<h2>Order confirmed</h2><p>Hi ${fullName},</p><p>Your order for <strong>${plan}</strong> has been successfully confirmed.</p><ul><li><strong>Payment ID:</strong> ${razorpay_payment_id}</li><li><strong>Order ID:</strong> ${razorpay_order_id}</li><li><strong>Amount:</strong> ₹${amount}</li></ul><p>We are verifying your payment and booking details, and will contact you shortly with next steps.</p><p>Thank you for choosing Tax Return Buddy.</p>`;
+    const confirmationHtml = `<h2>Order confirmed</h2><p>Hi ${fullName},</p><p>Your order for <strong>${plan}</strong> has been successfully confirmed.</p><ul><li><strong>Payment ID:</strong> ${razorpay_payment_id}</li><li><strong>Order ID:</strong> ${razorpay_order_id}</li><li><strong>Amount:</strong> ₹${amount}</li><li><strong>PAN:</strong> ${panNumber}</li><li><strong>Phone:</strong> ${phoneNumber}</li></ul><p>We are verifying your payment and booking details, and will contact you shortly with next steps.</p><p>Thank you for choosing Tax Return Buddy.</p>`;
 
-    await mailer.sendMail({
+    const mailOptions = {
       from: emailFrom,
       to: emailId,
       subject: `Your TaxOFF order is confirmed: ${plan}`,
       text: confirmationText,
       html: confirmationHtml,
-    });
+      replyTo: emailFrom,
+    };
 
-    return res.json({ success: true, message: 'Booking email sent and order confirmation email delivered.' });
+    if (emailTo && emailTo !== emailId) {
+      mailOptions.bcc = emailTo;
+    }
+
+    await mailer.sendMail(mailOptions);
+
+    return res.json({ success: true, message: 'Order confirmation email sent successfully.' });
   } catch (error) {
     console.error('Failed to send booking email:', error.message || error);
     return res.status(500).json({ error: 'Unable to send booking email.' });
