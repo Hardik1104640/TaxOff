@@ -1513,9 +1513,12 @@
       let selectedPlan = null;
       let selectedAmount = 0;
       let selectedPaymentMethod = null;
+      const isLocalHost = ['127.0.0.1', 'localhost', '::1'].includes(window.location.hostname);
       const apiBaseUrl = window.location.protocol === 'file:'
         ? 'http://127.0.0.1:3000'
-        : window.location.origin;
+        : isLocalHost
+          ? `${window.location.protocol}//${window.location.hostname}:3000`
+          : window.location.origin;
 
       const apiUrl = (path) => {
         if (path.startsWith('http://') || path.startsWith('https://')) {
