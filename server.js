@@ -156,6 +156,49 @@ app.post(['/send-booking', '/api/send-booking'], async (req, res) => {
   }
 });
 
+app.post(['/test-email', '/api/test-email'], async (req, res) => {
+  if (!mailer) {
+    return res.status(500).json({ error: 'Email service is not configured. Add SMTP_HOST, SMTP_PORT, SMTP_USER, and SMTP_PASS to .env.' });
+  }
+
+  const { emailId, fullName } = req.body;
+  if (!emailId) {
+    return res.status(400).json({ error: 'emailId is required for test email.' });
+  }
+
+  const customerName = fullName || 'Test Customer';
+  try {
+    const adminText = `Test email sent by ${customerName}: ${emailId}`;
+    const adminHtml = `<p>Test email sent by <strong>${customerName}</strong>: ${emailId}</p>`;
+
+    await mailer.sendMail({
+      from: emailFrom,
+      to: emailAdmin,
+      subject: `TaxOFF test email from ${customerName}`,
+      text: adminText,
+      html: adminHtml,
+      replyTo: emailId,
+    });
+
+    const confirmationText = `Hi ${customerName},\n\nThis is a test email from TaxOFF. Your email delivery system is working correctly.`;
+    const confirmationHtml = `<p>Hi ${customerName},</p><p>This is a test email from TaxOFF. Your email delivery system is working correctly.</p>`;
+
+    await mailer.sendMail({
+      from: emailFrom,
+      to: emailId,
+      subject: `TaxOFF test email delivered for ${customerName}`,
+      text: confirmationText,
+      html: confirmationHtml,
+      replyTo: emailAdmin,
+    });
+
+    return res.json({ success: true, message: 'Test email sent to admin and customer.' });
+  } catch (error) {
+    console.error('Failed to send test email:', error.message || error);
+    return res.status(500).json({ error: 'Unable to send test email.' });
+  }
+});
+
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
